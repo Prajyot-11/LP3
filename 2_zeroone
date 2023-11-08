@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+int f(int ind, int W, vector<int> &wt, vector<int> &value, vector<vector<int>> &dp)
+{
+	if (ind == 0)
+	{
+		if (wt[0] <= W)
+		{
+			return value[0];
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	if (dp[ind][W] != -1)
+		return dp[ind][W];
+
+	int not_take = 0 + f(ind - 1, W, wt, value, dp);
+	int take = INT_MIN;
+	if (wt[ind] <= W)
+	{
+		take = value[ind] + f(ind - 1, W - wt[ind], wt, value, dp);
+	}
+
+	return dp[ind][W] = max(take, not_take);
+}
+int knapsack(vector<int> wt, vector<int> value, int n, int W)
+{
+	// Write your code here
+	vector<vector<int>> dp(n, vector<int>(W + 1, -1));
+	return f(n - 1, W, wt, value, dp);
+}
+int main()
+{
+	int n;
+	cout << "Enter the number of items :";
+	cin >> n;
+	vector<int> wt(n);
+	vector<int> value(n);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> wt[i];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cin >> value[i];
+	}
+	int W;
+	cout << "Enter the capacity of the knapsack :";
+	cin >> W;
+
+	int ans = knapsack(wt, value, n, W);
+	cout << "The ans is :" << ans;
+	return 0;
+}
