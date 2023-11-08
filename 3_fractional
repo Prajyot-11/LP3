@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Item
+{
+    int value;
+    int weight;
+};
+
+static bool cmp(pair<double, Item> a, pair<double, Item> b)
+{
+    return a.first > b.first;
+}
+
+double fractionalKnapsack(int capacity, Item arr[], int n)
+{
+
+    vector<pair<double, Item>> v;
+    for (int i = 0; i < n; i++)
+    {
+        double perUnitValue = (arr[i].value * 1.0) / (arr[i].weight * 1.0);
+        pair<double, Item> p = make_pair(perUnitValue, arr[i]);
+        v.push_back(p);
+    }
+    sort(v.begin(), v.end(), cmp);
+
+    double totalvalue = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (v[i].second.weight > capacity)
+        {
+            totalvalue += capacity * v[i].first;
+            capacity = 0;
+        }
+        else
+        {
+            totalvalue += v[i].second.value;
+            capacity = capacity - v[i].second.weight;
+        }
+    }
+    return totalvalue;
+}
+
+int main()
+{
+    int n;
+    cout << "enter the number of items :";
+    cin >> n;
+    int capacity;
+    cout << "Enter the capacity of the Knapsack :";
+    cin >> capacity;
+    Item arr[n];
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i].value >> arr[i].weight;
+    }
+    int profit = fractionalKnapsack(capacity, arr, n);
+    cout << "The profit is :" << profit;
+    return 0;
+}
